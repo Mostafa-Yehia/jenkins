@@ -16,7 +16,8 @@ pipeline {
         stage('Test') {
             steps {
                 sh '''
-                    docker container run -d --name myapp-${BUILD_NUMBER} -p 9090:80 $DOCKERHUB_UN/myapp
+                    docker container rm myapp -f
+                    docker container run -d --name myapp -p 9090:80 $DOCKERHUB_UN/myapp
                     curl localhost:9090
                 '''
             }
