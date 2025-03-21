@@ -13,7 +13,7 @@ pipeline {
         }
         stage('Test') {
             steps {
-                sh 'echo testing...'
+                sh 'docker --version'
             }
         }
         stage('deploy') {
