@@ -18,6 +18,7 @@ pipeline {
                 sh '''
                     docker container rm myapp -f
                     docker container run -d --name myapp -p 9090:80 $DOCKERHUB_UN/myapp
+                    sleep 5
                     curl localhost:9090
                 '''
             }
