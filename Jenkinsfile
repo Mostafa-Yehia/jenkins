@@ -35,7 +35,7 @@ pipeline {
         }
         stage('deploy') {
             steps {
-                sh 'echo deploying...'
+                sh 'kubectl run myapp --image $DOCKERHUB_UN/myapp'
             }
         }
     }
