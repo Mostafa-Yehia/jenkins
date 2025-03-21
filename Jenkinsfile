@@ -5,15 +5,13 @@ pipeline {
         stage('Build') {
             steps {
                 sh '''
-                echo $HOME
-                echo $USER
-                ls
+                docker image build -t myapp .
                 '''
             }
         }
         stage('Test') {
             steps {
-                sh 'docker container run -d --name nginx nginx:alpine'
+                sh 'docker container run -d --name myapp myapp'
             }
         }
         stage('deploy') {
