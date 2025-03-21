@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        DOCKERHUB_UN = 'mostafaye7ia'
+    }
+
     stages {
         stage('Build') {
             steps {
