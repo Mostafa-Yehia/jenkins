@@ -13,7 +13,7 @@ pipeline {
         }
         stage('Test') {
             steps {
-                sh 'docker conatiner run -d --name nginx nginx:alpine'
+                sh 'docker container run -d --name nginx nginx:alpine'
             }
         }
         stage('deploy') {
