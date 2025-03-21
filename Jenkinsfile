@@ -9,14 +9,14 @@ pipeline {
         stage('Build') {
             steps {
                 sh '''
-                    docker image build -t myapp .
+                    docker image build -t $DOCKERHUB_UN/myapp .
                 '''
             }
         }
         stage('Test') {
             steps {
                 sh '''
-                    docker container run -d --name myapp -p 9090:80 myapp
+                    docker container run -d --name myapp -p 9090:80 $DOCKERHUB_UN/myapp
                     curl localhost:9090
                 '''
             }
@@ -26,7 +26,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKERHUB_UN', passwordVariable: 'DOCKERHUB_PASS')]) {
                     sh '''
                         docker login -u $DOCKERHUB_UN -p $DOCKERHUB_PASS
-                        docker push myapp
+                        docker push $DOCKERHUB_UN/myapp
                     '''
                 }
             }
