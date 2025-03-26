@@ -9,7 +9,7 @@ pipeline {
         stage('Build') {
             steps {
                 sh '''
-                    docker image build -t $DOCKERHUB_UN/myapp .
+                    docker image build -t $DOCKERHUB_UN/myapp:${GIT_COMMIT} .
                 '''
             }
         }
@@ -17,7 +17,7 @@ pipeline {
             steps {
                 sh '''
                     docker container rm myapp -f
-                    docker container run -d --name myapp -p 9090:80 $DOCKERHUB_UN/myapp
+                    docker container run -d --name myapp -p 9090:80 $DOCKERHUB_UN/myapp:${GIT_COMMIT}
                     sleep 5
                     curl localhost:9090
                 '''
@@ -28,14 +28,19 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKERHUB_UN', passwordVariable: 'DOCKERHUB_PASS')]) {
                     sh '''
                         docker login -u $DOCKERHUB_UN -p $DOCKERHUB_PASS
-                        docker push $DOCKERHUB_UN/myapp
+                        docker push $DOCKERHUB_UN/myapp:${GIT_COMMIT}
                     '''
                 }
             }
         }
         stage('deploy') {
             steps {
-                sh 'kubectl run myapp --image $DOCKERHUB_UN/myapp'
+                sh '''
+                    export new_image="$DOCKERHUB_UN/myapp:${GIT_COMMIT}"
+                    render=$(cat myapp-deployment.yml)
+                    echo "$render" | envsubst > myapp-deployment.yml
+                    kubectl apply -f myapp-deployment.yml
+                '''
             }
         }
     }
