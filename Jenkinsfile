@@ -44,4 +44,12 @@ pipeline {
             }
         }
     }
+    post { 
+        success { 
+            slackSend message: "Pipeline is successful"
+        }
+        failure { 
+            slackSend message: "Pipeline is failed"
+        }
+    }
 }
