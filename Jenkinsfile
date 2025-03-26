@@ -23,25 +23,25 @@ pipeline {
                 '''
             }
         }
-        stage('Deliver') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKERHUB_UN', passwordVariable: 'DOCKERHUB_PASS')]) {
-                    sh '''
-                        docker login -u $DOCKERHUB_UN -p $DOCKERHUB_PASS
-                        docker push $DOCKERHUB_UN/myapp:${GIT_COMMIT}
-                    '''
-                }
-            }
-        }
-        stage('deploy') {
-            steps {
-                sh '''
-                    export new_image="$DOCKERHUB_UN/myapp:${GIT_COMMIT}"
-                    render=$(cat myapp-deployment.yml)
-                    echo "$render" | envsubst > myapp-deployment.yml
-                    kubectl apply -f myapp-deployment.yml
-                '''
-            }
-        }
+    //     stage('Deliver') {
+    //         steps {
+    //             withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKERHUB_UN', passwordVariable: 'DOCKERHUB_PASS')]) {
+    //                 sh '''
+    //                     docker login -u $DOCKERHUB_UN -p $DOCKERHUB_PASS
+    //                     docker push $DOCKERHUB_UN/myapp:${GIT_COMMIT}
+    //                 '''
+    //             }
+    //         }
+    //     }
+    //     stage('deploy') {
+    //         steps {
+    //             sh '''
+    //                 export new_image="$DOCKERHUB_UN/myapp:${GIT_COMMIT}"
+    //                 render=$(cat myapp-deployment.yml)
+    //                 echo "$render" | envsubst > myapp-deployment.yml
+    //                 kubectl apply -f myapp-deployment.yml
+    //             '''
+    //         }
+    //     }
     }
 }
