@@ -17,6 +17,7 @@ pipeline {
             steps {
                 sh '''
                     docker container rm myapp -f
+                    sleep 5
                     docker container run -d --name myapp -p 9090:80 $DOCKERHUB_UN/myapp:${GIT_COMMIT}
                     sleep 5
                     curl localhost:9090
